@@ -1,0 +1,47 @@
+---
+uti: com.xamarin.workbook
+platforms:
+- Console
+---
+
+### Nuestra clase de Customer para definir el objeto
+
+```csharp
+class Customer{
+    
+    public string name {get;set;}
+    public string email {get;set;}
+
+}
+```
+
+### Algunos helpers para hacer las llamadas http
+
+```csharp
+using System.Net;
+WebClient AzureClient () {
+	WebClient client = new WebClient();
+	client.Headers.Add (HttpRequestHeader.Accept, "application/json");
+	client.Headers.Add (HttpRequestHeader.ContentType, "application/json");
+	client.Headers.Add ("ZUMO-API-VERSION", "2.0.0"); // for working with Easy Table
+	return client;
+}
+```
+
+### Llamar el servicio en Azure
+
+```csharp
+var customers = new List<Customer>();
+var responseString = "";
+try
+{
+	WebClient client = AzureClient();
+	responseString = client.DownloadString ("http://xamarininthecloudbackend.azurewebsites.net/tables/customers"); // GET
+	// ...and wait...
+	Console.WriteLine ("GET => " + responseString);
+}
+catch (System.Net.WebException e)
+{
+	Console.WriteLine ("X-ZUMO-APPLICATION failed " + e.Message);
+}
+```
